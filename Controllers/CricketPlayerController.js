@@ -3,8 +3,8 @@ const asyncHandler = require('express-async-handler')
 // const randomString = require("randomstring");
 const { cricketPlayerModel } = require("../models/CricketPlayerModel");
 const { sendToken } = require('../middleware/utils/SentToken');
-
-
+const CloudUploadImage = require("../utils/Cloudinary");
+const fs = require("fs")
 
 // create cricket player here
 
@@ -16,7 +16,7 @@ const CreateCricketPlayer = asyncHandler(async (req, res) => {
             return res.status(400).json({ error: "All fields are required" });
         }
 
-        
+
         const user = await cricketPlayerModel.findOne({ email });
 
         if (user) {
@@ -83,11 +83,48 @@ const login = asyncHandler(async (req, res) => {
         // res.status(200).send("dkljddh")
 
     } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+})
 
+
+
+// create nic image or pdf here
+
+const createNicPdf = asyncHandler(async (req, res) => {
+    const { email } = req.body
+    try {
+        const uploader = (path) => CloudUploadImage.cloudinaryUploadImg(path, 'images');
+
+
+        const urls = [];
+        const files = req.files;
+        for (const file of files) {
+            const { path } = file;
+            const newpath = await uploader(path);
+            urls.push(newpath);
+            fs.unlinkSync(path);
+        }
+
+        console.log("urls", urls)
+
+        const existingUser = await cricketPlayerModel.findOne({ email });
+
+        if (!existingUser) {
+            return res.status(404).json({ message: "User not found!" });
+        }
+
+        existingUser.Cnicurls = urls
+
+        await existingUser.save();
+
+        res.status(201).send("Nic or Pdf Updated")
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 })
 
 
 
 
-module.exports = { CreateCricketPlayer, login }
+module.exports = { CreateCricketPlayer, login, createNicPdf }
