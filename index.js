@@ -10,7 +10,6 @@ const cloudinary = require("cloudinary").v2;
 
 
 
-
 cloudinary.config({
     cloud_name: process.env.CloudName,
     api_key: process.env.API_key,
@@ -20,6 +19,7 @@ cloudinary.config({
 
 // 
 const createcricketPlayer = require("./routes/CricketPlayerRoute");
+const createswimmingPlayer = require("./routes/SwimingRoute");
 
 
 // middleware calling here
@@ -35,6 +35,7 @@ app.use("*", cors());
 
 
 app.use(createcricketPlayer)
+app.use(createswimmingPlayer)
 
 
 app.get("/", (req, res) => {

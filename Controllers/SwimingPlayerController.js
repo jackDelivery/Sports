@@ -1,25 +1,15 @@
 const asyncHandler = require('express-async-handler')
 // const nodemailer = require("nodemailer");
 // const randomString = require("randomstring");
-const { cricketPlayerModel } = require("../models/CricketPlayerModel");
+const { swimingPlayerModel } = require("../models/SwimmingPlayer");
 const { sendToken } = require('../middleware/utils/SentToken');
 const CloudUploadImage = require("../utils/Cloudinary");
 const fs = require("fs")
-// const serviceAccount = require('../firebase-config.json'); // Replace with your file path
-// const admin = require("firebase-admin");
-
-
-
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     storageBucket: 'gs://sports-backend-e8196.appspot.com' // Replace with your bucket name
-// });
-
 
 
 // create cricket player here
 
-const CreateCricketPlayer = asyncHandler(async (req, res) => {
+const CreateSwimingPlayer = asyncHandler(async (req, res) => {
     try {
         const { name, email, password, dateofbirth, number, address, organizationcurrentlyaffliated, category, country, gender } = req.body;
 
@@ -28,7 +18,7 @@ const CreateCricketPlayer = asyncHandler(async (req, res) => {
         }
 
 
-        const user = await cricketPlayerModel.findOne({ email });
+        const user = await swimingPlayerModel.findOne({ email });
 
         if (user) {
             res.status(404).json({ message: 'Email already exits' });
@@ -36,7 +26,7 @@ const CreateCricketPlayer = asyncHandler(async (req, res) => {
         }
 
 
-        const User = new cricketPlayerModel({
+        const User = new swimingPlayerModel({
             name: name,
             email: email,
             password: password,
@@ -76,7 +66,7 @@ const login = asyncHandler(async (req, res) => {
         }
 
 
-        const user = await cricketPlayerModel.findOne({ email });
+        const user = await swimingPlayerModel.findOne({ email });
 
         if (!user) {
             res.status(404).json({ message: 'User not found' });
@@ -119,7 +109,7 @@ const createNicPdf = asyncHandler(async (req, res) => {
 
         console.log("urls", urls)
 
-        const existingUser = await cricketPlayerModel.findOne({ email });
+        const existingUser = await swimingPlayerModel.findOne({ email });
 
         if (!existingUser) {
             return res.status(404).json({ message: "User not found!" });
@@ -139,4 +129,4 @@ const createNicPdf = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { CreateCricketPlayer, login, createNicPdf }
+module.exports = { CreateSwimingPlayer, login, createNicPdf }

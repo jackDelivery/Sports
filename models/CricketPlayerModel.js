@@ -55,6 +55,10 @@ const CricketPlayerSchema = new mongoose.Schema({
         trim: true
     },
     Cnicurls: [],
+    nicNumber: {
+        type: String,
+        trim: true
+    },
     isApproved: {
         type: Boolean,
         default: false
@@ -62,7 +66,8 @@ const CricketPlayerSchema = new mongoose.Schema({
     role: {
         type: String,
         default: "user"
-    }
+    },
+    pdf: String
 
 })
 
