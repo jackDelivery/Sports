@@ -2,18 +2,11 @@ const asyncHandler = require('express-async-handler')
 // const nodemailer = require("nodemailer");
 // const randomString = require("randomstring");
 const { cricketPlayerModel } = require("../models/CricketPlayerModel");
+const { swimingPlayerModel } = require("../models/SwimmingPlayer");
+
 const { sendToken } = require('../middleware/utils/SentToken');
 const CloudUploadImage = require("../utils/Cloudinary");
 const fs = require("fs")
-// const serviceAccount = require('../firebase-config.json'); // Replace with your file path
-// const admin = require("firebase-admin");
-
-
-
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     storageBucket: 'gs://sports-backend-e8196.appspot.com' // Replace with your bucket name
-// });
 
 
 
@@ -29,6 +22,14 @@ const CreateCricketPlayer = asyncHandler(async (req, res) => {
 
 
         const user = await cricketPlayerModel.findOne({ email });
+        const user2 = await swimingPlayerModel.findOne({ email });
+
+        if (user !== user2) {
+            throw new Error("user with this email already exit as swimming player or cricket player")
+        }
+
+
+
 
         if (user) {
             res.status(404).json({ message: 'Email already exits' });

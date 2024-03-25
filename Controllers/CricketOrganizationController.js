@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const { cricketOrganizationModel } = require("../models/CricketOrganization");
+const { swimmingOrganizationModel } = require("../models/SwimmingOrganization");
 const { sendToken } = require('../middleware/utils/SentToken');
 
 
@@ -16,6 +17,14 @@ const createOrganizationPlayer = asyncHandler(async (req, res) => {
 
 
         const user = await cricketOrganizationModel.findOne({ email });
+
+        const user2 = await swimmingOrganizationModel.findOne({ email });
+
+
+        if (user !== user2) {
+            throw new Error("user with this email already exit as cricket organization or swimming organization")
+        }
+
 
         if (user) {
             res.status(404).json({ message: 'Email already exits' });
