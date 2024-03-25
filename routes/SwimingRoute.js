@@ -25,7 +25,7 @@ router.route("/swimming/users").get(users);
 router.route("/swimming/admin").post(loginAdmin);
 
 
-router.route("/nic-pdf").post(imagePhotoUpload.array("images", 2), nicImgResize, createNicPdf);
+router.route("/swimming-nic/pdf").post(imagePhotoUpload.array("images", 2), nicImgResize, createNicPdf);
 
 
 

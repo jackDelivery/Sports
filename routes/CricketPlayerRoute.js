@@ -26,7 +26,7 @@ router.route("/cricket/admin").post(loginAdmin);
 
 
 
-router.route("/nic-pdf").post(imagePhotoUpload.array("images", 2), nicImgResize, createNicPdf);
+router.route("/cricket-nic/pdf").post(imagePhotoUpload.array("images", 2), nicImgResize, createNicPdf);
 
 
 
