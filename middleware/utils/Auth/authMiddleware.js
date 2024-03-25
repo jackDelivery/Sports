@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const { cricketPlayerModel } = require("../../../models/CricketPlayerModel");
 const { swimingPlayerModel } = require("../../../models/SwimmingPlayer");
 const { cricketOrganizationModel } = require("../../../models/CricketOrganization");
+const { swimmingOrganizationModel } = require("../../../models/SwimmingOrganization");
 const expressAsyncHandler = require("express-async-handler");
 
 
@@ -150,8 +151,25 @@ const CricketOrganizationisAdminApproved = async (req, res, next) => {
     }
 };
 
+// swiming organization
+const SwimingOrganizationisAdminApproved = async (req, res, next) => {
+    const { email } = req.body; // Use req.user to get the logged-in user's email
+    try {
+        const adminUser = await swimmingOrganizationModel.findOne({ email });
 
+        if (!adminUser) {
+            throw new Error("User not found");
+        }
 
+        if (adminUser.isApproved !== true) {
+            throw new Error("Admin not approved yet");
+        }
+
+        next(); // If everything is fine, proceed to the next middleware or route
+    } catch (error) {
+        res.status(401).json({ message: error.message });
+    }
+};
 
 
 // swimming player approved
@@ -176,4 +194,4 @@ const SwimmingisAdminApproved = async (req, res, next) => {
 };
 
 
-module.exports = { CricketauthMiddleware, swimingauthMiddleware, CricketisAdmin, SwimmingisAdmin, CricketisAdminApproved, SwimmingisAdminApproved, CricketOrganizationisAdminApproved };
+module.exports = { CricketauthMiddleware, swimingauthMiddleware, CricketisAdmin, SwimmingisAdmin, CricketisAdminApproved, SwimmingisAdminApproved, CricketOrganizationisAdminApproved, SwimingOrganizationisAdminApproved };
