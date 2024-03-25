@@ -9,7 +9,7 @@ const { sendToken } = require('../middleware/utils/SentToken');
 const createOrganizationPlayer = asyncHandler(async (req, res) => {
     try {
 
-        const { name, email, password, number, address, country, type } = req.body;
+        const { name, email, password, number, address, country, type,pdf } = req.body;
 
         if (!name && !email && !password && !number && !address && !type && !country) {
             return res.status(400).json({ error: "All fields are required" });
@@ -39,6 +39,7 @@ const createOrganizationPlayer = asyncHandler(async (req, res) => {
             address: address,
             type: type,
             country: country,
+            pdf: pdf
         });
 
         if (!User) {
