@@ -114,9 +114,9 @@ const CricketisAdminApproved = async (req, res, next) => {
     try {
         const adminUser = await cricketPlayerModel.findOne({ email });
 
-        // if (!adminUser) {
-        //   throw new Error("User not found");
-        // }
+        if (!adminUser) {
+          throw new Error("User not found");
+        }
 
         if (adminUser.isApproved !== true) {
             throw new Error("Admin not approved yet");

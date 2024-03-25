@@ -139,4 +139,122 @@ const createNicPdf = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { CreateCricketPlayer, login, createNicPdf }
+
+// admin approved
+
+const AdminApproved = asyncHandler(async (req, res) => {
+
+    const { isApproved, _id } = req.body;
+
+    try {
+
+        const approved = await cricketPlayerModel.findByIdAndUpdate(_id, {
+            isApproved: isApproved
+        }, { new: true })
+
+        if (!approved) {
+            throw new Error("User Not Found")
+        }
+
+
+        res.status(200).json({ message: "Admin Approved Your Account", approved: approved });
+
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+})
+
+
+const adminApprovedGet = asyncHandler(async (req, res) => {
+    try {
+
+        let result = await cricketPlayerModel.find({});
+
+        if (!result) {
+            throw new Error("user not found!")
+        }
+
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+})
+
+
+// delete activate users
+
+const AdminDeleteUsers = asyncHandler(async (req, res) => {
+    const { id } = req.params; // Assuming id is passed as a parameter
+
+    try {
+        const deletedUser = await cricketPlayerModel.findByIdAndDelete(id); // Using id parameter to find and delete user
+
+        if (!deletedUser) {
+            return res.status(404).json({ message: "User Not Found" });
+        }
+
+        // Send response if user is successfully deleted
+        res.status(200).json({ message: "Admin has deleted the user account" });
+
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+
+
+
+// users
+
+const users = asyncHandler(async (req, res) => {
+    try {
+
+        const users = await cricketPlayerModel.find({});
+
+
+        if (!users) {
+            throw new Error("user not found");
+        }
+
+        res.status(200).send(users)
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+})
+
+
+const loginAdmin = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    // Check if user with given email exists
+    const findAdmin = await cricketPlayerModel.findOne({ email });
+
+    // If no user found, or user is not admin, throw an error
+    if (!findAdmin) {
+        throw new Error("User not found");
+    } else if (findAdmin.role !== "admin") {
+        throw new Error("You are not Admin");
+    }
+
+    // If user is admin, compare passwords
+    if (password === findAdmin.password) {
+        // Passwords match, send token and success response
+        sendToken(res, findAdmin, 200, "Login Successfully");
+        res.status(200).send(findAdmin);
+    } else {
+        // Passwords don't match, throw an error
+        throw new Error("Invalid Credentials");
+    }
+});
+
+
+
+
+
+
+
+module.exports = { CreateCricketPlayer, login, createNicPdf, users, AdminApproved, AdminDeleteUsers, adminApprovedGet }
