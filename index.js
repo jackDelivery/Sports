@@ -20,7 +20,7 @@ cloudinary.config({
 // 
 const createcricketPlayer = require("./routes/CricketPlayerRoute");
 const createswimmingPlayer = require("./routes/SwimingRoute");
-
+const cricketorganization = require("./routes/CricketOrganizationRoute");
 
 // middleware calling here
 app.use(express.json())
@@ -36,6 +36,7 @@ app.use("*", cors());
 
 app.use(createcricketPlayer)
 app.use(createswimmingPlayer)
+app.use(cricketorganization)
 
 
 app.get("/", (req, res) => {
